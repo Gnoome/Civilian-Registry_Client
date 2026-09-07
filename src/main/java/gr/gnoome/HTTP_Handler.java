@@ -2,13 +2,17 @@ package gr.gnoome;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class HTTP_Handler {
+
+    private static String URL =  "http://localhost:8080/Civilian_REST/api/Civilians";
 
     public static void SendServerRequest(String method, String url, String json) throws IOException, InterruptedException {
 
@@ -23,7 +27,7 @@ public class HTTP_Handler {
                 request.POST(HttpRequest.BodyPublishers.ofString(json));
                 break;
             case "PUT":
-                request.PUT(HttpRequest.BodyPublishers.ofString(json));
+                request.method("PATCH",HttpRequest.BodyPublishers.noBody());
                 break;
             case "GET":
                 request.GET();
@@ -41,14 +45,30 @@ public class HTTP_Handler {
 
     }
 
-   
-
-    public static void SendCivilian(Person person) throws Exception {
-
-        
-
-        SendServerRequest(Post, json, json);
-
-
+    public static void ViewAllCivilians() throws IOException, InterruptedException {
+        SendServerRequest("GET", URL, null);
     }
+
+    public static void SearchCivilian(Person person) throws IOException, InterruptedException {
+       
+        SendServerRequest("GET", URL + "/search" + "?id=" + URLEncoder.encode(person.Id, StandardCharsets.UTF_8) + "&name="
+         + URLEncoder.encode(person.Name, StandardCharsets.UTF_8) + "&surname=" + URLEncoder.encode(person.Surname, StandardCharsets.UTF_8) + "&gender=" + person.Gender + "&birthdate="
+         + person.Birthdate + "&address=" + URLEncoder.encode(person.Address, StandardCharsets.UTF_8) + "&tax=" + URLEncoder.encode(person.Tax, StandardCharsets.UTF_8), null);
+    }
+
+    public static void SendCivilian(Person person) throws IOException, InterruptedException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(person);
+        SendServerRequest("POST", URL, json);
+    }
+
+    public static void UpdateCivilian(Person person) throws IOException, InterruptedException {
+        SendServerRequest("PUT", URL+"/"+person.Id+"?address="+URLEncoder.encode(person.Address, StandardCharsets.UTF_8)+"&tax="+URLEncoder.encode(person.Tax, StandardCharsets.UTF_8), null);
+    }
+
+    public static void DeleteCivilian(String id) throws IOException, InterruptedException {
+        SendServerRequest("DELETE", URL+"/"+id, null);
+    }
+
+
 }
