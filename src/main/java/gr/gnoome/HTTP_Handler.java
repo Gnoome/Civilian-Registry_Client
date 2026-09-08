@@ -51,9 +51,14 @@ public class HTTP_Handler {
 
     public static void SearchCivilian(Person person) throws IOException, InterruptedException {
        
-        SendServerRequest("GET", URL + "/search" + "?id=" + URLEncoder.encode(person.Id, StandardCharsets.UTF_8) + "&name="
-         + URLEncoder.encode(person.Name, StandardCharsets.UTF_8) + "&surname=" + URLEncoder.encode(person.Surname, StandardCharsets.UTF_8) + "&gender=" + person.Gender + "&birthdate="
-         + person.Birthdate + "&address=" + URLEncoder.encode(person.Address, StandardCharsets.UTF_8) + "&tax=" + URLEncoder.encode(person.Tax, StandardCharsets.UTF_8), null);
+        SendServerRequest("GET", URL + "/search" 
+        + "?id=" + URLEncoder.encode(person.id, StandardCharsets.UTF_8)
+         + "&name="+ person.name
+         + "&surname=" + person.surname
+          + "&gender=" + person.gender
+           + "&birthdate="+ person.birthdate 
+         + "&address=" + URLEncoder.encode(person.address, StandardCharsets.UTF_8)
+          + "&tax=" + URLEncoder.encode(person.tax, StandardCharsets.UTF_8), null);
     }
 
     public static void SendCivilian(Person person) throws IOException, InterruptedException {
@@ -63,7 +68,7 @@ public class HTTP_Handler {
     }
 
     public static void UpdateCivilian(Person person) throws IOException, InterruptedException {
-        SendServerRequest("PUT", URL+"/"+person.Id+"?address="+URLEncoder.encode(person.Address, StandardCharsets.UTF_8)+"&tax="+URLEncoder.encode(person.Tax, StandardCharsets.UTF_8), null);
+        SendServerRequest("PUT", URL+"/"+person.id+"?address="+URLEncoder.encode(person.address, StandardCharsets.UTF_8)+"&tax="+URLEncoder.encode(person.tax, StandardCharsets.UTF_8), null);
     }
 
     public static void DeleteCivilian(String id) throws IOException, InterruptedException {
