@@ -14,7 +14,7 @@ public class HTTP_Handler {
 
     private static String URL =  "http://localhost:8080/Civilian_REST/api/Civilians";
 
-    public static void sendServerRequest(String method, String url, String json) throws IOException, InterruptedException {
+    public static HttpResponse<String> sendServerRequest(String method, String url, String json) throws IOException, InterruptedException {
 
         HttpClient client = HttpClient.newHttpClient();
 
@@ -40,13 +40,20 @@ public class HTTP_Handler {
 
         HttpResponse<String> response = client.send(request.build(),HttpResponse.BodyHandlers.ofString());
 
+        return response;
         
-        System.out.println(response.body());
 
     }
 
     public static void viewAllCivilians() throws IOException, InterruptedException {
-        sendServerRequest("GET", URL, null);
+        HttpResponse<String> response = sendServerRequest("GET", URL, null);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Person[] persons = objectMapper.readValue(response.body(), Person[].class);
+        for (Person person : persons) {
+            System.out.println(person);
+        }
+        
     }
 
     public static void searchCivilian(Person person) throws IOException, InterruptedException {
@@ -89,14 +96,20 @@ public class HTTP_Handler {
             url.append("tax=").append(URLEncoder.encode(person.tax, StandardCharsets.UTF_8));
         }
 
-        sendServerRequest("GET", url.toString(), null);
+        HttpResponse<String> response = sendServerRequest("GET", url.toString(), null);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Person[] persons = objectMapper.readValue(response.body(), Person[].class);
+        for (Person p : persons) {
+            System.out.println(p);
+        }
     }
 
     public static void sendCivilian(Person person) throws IOException, InterruptedException {
 
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(person);
-        sendServerRequest("POST", URL, json);
+        HttpResponse<String> response = sendServerRequest("POST", URL, json);
+        System.out.println(response.body());
     }
 
     public static void updateCivilian(Person person) throws IOException, InterruptedException {
@@ -112,13 +125,20 @@ public class HTTP_Handler {
             url.append(person.address==null? "?" : "&");
             url.append("tax=").append(URLEncoder.encode(person.tax, StandardCharsets.UTF_8));
         }
+        
+       HttpResponse<String> response = sendServerRequest("PATCH", url.toString(), null);
 
-        sendServerRequest("PATCH", url.toString(), null);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Person[] persons = objectMapper.readValue(response.body(), Person[].class);
+        for (Person p : persons) {
+            System.out.println(p);
+        }
     }
 
     public static void deleteCivilian(String id) throws IOException, InterruptedException {
 
-        sendServerRequest("DELETE", URL+"/"+id, null);
+       HttpResponse<String> response = sendServerRequest("DELETE", URL+"/"+id, null);
+       System.out.println(response.body());
     }
 
 
