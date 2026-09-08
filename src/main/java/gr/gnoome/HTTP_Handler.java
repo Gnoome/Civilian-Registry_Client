@@ -14,7 +14,7 @@ public class HTTP_Handler {
 
     private static String URL =  "http://localhost:8080/Civilian_REST/api/Civilians";
 
-    public static void SendServerRequest(String method, String url, String json) throws IOException, InterruptedException {
+    public static void sendServerRequest(String method, String url, String json) throws IOException, InterruptedException {
 
         HttpClient client = HttpClient.newHttpClient();
 
@@ -26,7 +26,7 @@ public class HTTP_Handler {
             case "POST":
                 request.POST(HttpRequest.BodyPublishers.ofString(json));
                 break;
-            case "PUT":
+            case "PATCH":
                 request.method("PATCH",HttpRequest.BodyPublishers.noBody());
                 break;
             case "GET":
@@ -40,39 +40,85 @@ public class HTTP_Handler {
 
         HttpResponse<String> response = client.send(request.build(),HttpResponse.BodyHandlers.ofString());
 
-        System.out.println(response.statusCode());
+        
         System.out.println(response.body());
 
     }
 
-    public static void ViewAllCivilians() throws IOException, InterruptedException {
-        SendServerRequest("GET", URL, null);
+    public static void viewAllCivilians() throws IOException, InterruptedException {
+        sendServerRequest("GET", URL, null);
     }
 
-    public static void SearchCivilian(Person person) throws IOException, InterruptedException {
+    public static void searchCivilian(Person person) throws IOException, InterruptedException {
        
-        SendServerRequest("GET", URL + "/search" 
-        + "?id=" + URLEncoder.encode(person.id, StandardCharsets.UTF_8)
-         + "&name="+ person.name
-         + "&surname=" + person.surname
-          + "&gender=" + person.gender
-           + "&birthdate="+ person.birthdate 
-         + "&address=" + URLEncoder.encode(person.address, StandardCharsets.UTF_8)
-          + "&tax=" + URLEncoder.encode(person.tax, StandardCharsets.UTF_8), null);
+        StringBuilder url = new StringBuilder(URL + "/search");
+        boolean firstParam = true;
+
+        if (person.id != null){
+            url.append(firstParam ? "?" : "&");
+            url.append("id=").append(URLEncoder.encode(person.id, StandardCharsets.UTF_8));
+            firstParam = false;
+        }
+        if (person.name != null){
+            url.append(firstParam ? "?" : "&");
+            url.append("name=").append(URLEncoder.encode(person.name, StandardCharsets.UTF_8));
+            firstParam = false;
+        }
+        if (person.surname != null){
+            url.append(firstParam ? "?" : "&");
+            url.append("surname=").append(URLEncoder.encode(person.surname, StandardCharsets.UTF_8));
+            firstParam = false;
+        }
+        if (person.gender != null){
+            url.append(firstParam ? "?" : "&");
+            url.append("gender=").append(URLEncoder.encode(person.gender, StandardCharsets.UTF_8));
+            firstParam = false;
+        }
+        if (person.birthdate != null){
+            url.append(firstParam ? "?" : "&");
+            url.append("birthdate=").append(URLEncoder.encode(person.birthdate, StandardCharsets.UTF_8));
+            firstParam = false;
+        }
+        if (person.address != null){
+            url.append(firstParam ? "?" : "&");
+            url.append("address=").append(URLEncoder.encode(person.address, StandardCharsets.UTF_8));
+            firstParam = false;
+        }
+        if (person.tax != null){
+            url.append(firstParam ? "?" : "&");
+            url.append("tax=").append(URLEncoder.encode(person.tax, StandardCharsets.UTF_8));
+        }
+
+        sendServerRequest("GET", url.toString(), null);
     }
 
-    public static void SendCivilian(Person person) throws IOException, InterruptedException {
+    public static void sendCivilian(Person person) throws IOException, InterruptedException {
+
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(person);
-        SendServerRequest("POST", URL, json);
+        sendServerRequest("POST", URL, json);
     }
 
-    public static void UpdateCivilian(Person person) throws IOException, InterruptedException {
-        SendServerRequest("PUT", URL+"/"+person.id+"?address="+URLEncoder.encode(person.address, StandardCharsets.UTF_8)+"&tax="+URLEncoder.encode(person.tax, StandardCharsets.UTF_8), null);
+    public static void updateCivilian(Person person) throws IOException, InterruptedException {
+         
+        StringBuilder url = new StringBuilder(URL + "/"+person.id);
+
+
+         if (person.address != null){
+            url.append("?address=").append(URLEncoder.encode(person.address, StandardCharsets.UTF_8));
+            
+        }
+        if (person.tax != null){
+            url.append(person.address==null? "?" : "&");
+            url.append("tax=").append(URLEncoder.encode(person.tax, StandardCharsets.UTF_8));
+        }
+
+        sendServerRequest("PATCH", url.toString(), null);
     }
 
-    public static void DeleteCivilian(String id) throws IOException, InterruptedException {
-        SendServerRequest("DELETE", URL+"/"+id, null);
+    public static void deleteCivilian(String id) throws IOException, InterruptedException {
+
+        sendServerRequest("DELETE", URL+"/"+id, null);
     }
 
 

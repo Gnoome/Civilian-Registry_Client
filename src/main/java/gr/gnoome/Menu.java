@@ -9,16 +9,16 @@ public class Menu {
     private static String Input;
 
 
-    private static void ViewAllCivilians() {
+    private static void viewAllCivilians() {
         System.out.println("You have selected to view all civilians");
         try {
-            HTTP_Handler.ViewAllCivilians();
+            HTTP_Handler.viewAllCivilians();
         } catch (Exception e) {
             System.out.println("Error occurred while viewing civilians: " + e.getMessage());
         }
     }
 
-      private static void SearchCivilian() {
+      private static void searchCivilian() {
 
         Person person = new Person();
 
@@ -31,46 +31,46 @@ public class Menu {
             return;
 
         }
-        person.Id = Input;
+        person.id = Input;
         
         System.out.println("Do you wish to search by Name? (Type the name or leave it blank)");
         Input=scan.nextLine();
         if (!Input.isEmpty()){
-            person.Name = Input;
+            person.name = Input;
         }
             
           System.out.println("Do you wish to search by Surname? (Type the surname or leave it blank)");
         Input=scan.nextLine();
         if (!Input.isEmpty()){
-            person.Surname = Input;
+            person.surname = Input;
         }
 
           System.out.println("Do you wish to search by Gender? (Type the gender(M or F) or leave it blank)");
         Input=scan.nextLine();
         if (Input.equalsIgnoreCase("m") || Input.equalsIgnoreCase("f")){
-            person.Gender = Input;
+            person.gender = Input;
         }
 
           System.out.println("Do you wish to search by Birthdate? (Type the birthdate(dd-mm-yyyy) or leave it blank)");
         Input=scan.nextLine();
         if (Input.matches("\\d{2}-\\d{2}-\\d{4}")){
-            person.Birthdate = Input;
+            person.birthdate = Input;
         }
 
            System.out.println("Do you wish to search by address? (Type the address or leave it blank)");
         Input=scan.nextLine();
         if (!Input.isEmpty()){
-            person.Address = Input;
+            person.address = Input;
         }
 
            System.out.println("Do you wish to search by Tax Number? (Type the tax number(9 digits) or leave it blank)");
         Input=scan.nextLine();
         if (Input.matches("\\d{9}")){
-            person.Tax = Input;
+            person.tax = Input;
         }
          
        try {
-            HTTP_Handler.SearchCivilian(person);
+            HTTP_Handler.searchCivilian(person);
         } catch (Exception e) {
             System.out.println("Error occurred while searching for civilian: " + e.getMessage());
         }
@@ -78,7 +78,7 @@ public class Menu {
     }
 
 
-    private static void AddCivilian() {
+    private static void addCivilian() {
         Person person =new Person();
 
         System.out.println("\nYou have selected to add a new Civilian");
@@ -86,12 +86,13 @@ public class Menu {
 
         System.out.print("Civilian ID Number (8 characters): ");
         Input=scan.nextLine();
-       // System.out.println(Input);
+    
+
         if (Input.length()!=8 || Input.isEmpty()){
             System.out.println("Invalid Id Number format");
             return;
         }
-        person.Id = Input;
+        person.id = Input;
         
 
         System.out.print("Name: ");
@@ -100,7 +101,7 @@ public class Menu {
             System.out.println("Invalid format");
             return;
         }
-        person.Name = Input;
+        person.name = Input;
         
         System.out.print("Surname: ");
          Input= scan.nextLine();
@@ -108,7 +109,7 @@ public class Menu {
             System.out.println("Invalid format");
             return;
         }
-        person.Surname = Input;
+        person.surname = Input;
 
         System.out.print("Gender(M or F): ");
          Input= scan.nextLine();
@@ -116,7 +117,7 @@ public class Menu {
             System.out.println("Invalid format");
             return;
         }
-        person.Gender = Input;
+        person.gender = Input;
 
          System.out.print("Birthdate(dd-mm-yyyy): ");
          Input= scan.nextLine();
@@ -124,14 +125,14 @@ public class Menu {
             System.out.println("Invalid format");
             return;
         }
-        person.Birthdate = Input;
+        person.birthdate = Input;
 
          System.out.print("Address(optional): ");
          Input= scan.nextLine();
         if(Input.isEmpty()){
             Input=null;
         }
-        person.Address = Input;
+        person.address = Input;
 
          System.out.print("Tax_Nummber(optional 9 digits): ");
          Input= scan.nextLine();
@@ -139,36 +140,36 @@ public class Menu {
             System.out.println("Invalid format");
             return;
         }
-        person.Tax = Input;
+        person.tax = Input;
         System.out.println();
 
         try {
-            HTTP_Handler.SendCivilian(person);
+            HTTP_Handler.sendCivilian(person);
         } catch (Exception e) {
             System.out.println("Error occurred while adding civilian: " + e.getMessage());
         }
 
     }
 
-    private static void RemoveCivilian(){
+    private static void removeCivilian(){
         System.out.println("You have selected to remove a civilian");
 
         System.out.print("Please provide the Civilian ID Number (8 characters): ");
-        Input=scan.next();
+        Input=scan.nextLine();
         if (Input.length()!=8 || Input.isEmpty()){
             System.out.println("Invalid Id Number format");
             return;
         }
 
         try {
-            HTTP_Handler.DeleteCivilian(Input);
+            HTTP_Handler.deleteCivilian(Input);
         } catch (Exception e) {
             System.out.println("Error occurred while deleting civilian: " + e.getMessage());
         }
         
     }
 
-    private static void UpdateCivilian(){
+    private static void updateCivilian(){
         System.out.println("You have selected to update a civilian");
 
         System.out.print("Please provide the Civilian ID Number (8 characters): ");
@@ -195,18 +196,19 @@ public class Menu {
         }
 
         Person person = new Person();
-        person.Address = address;
-        person.Tax = tax;
+        person.id = Input;
+        person.address = address;
+        person.tax = tax;
 
         try {
-            HTTP_Handler.UpdateCivilian(person);
+            HTTP_Handler.updateCivilian(person);
         } catch (Exception e) {
             System.out.println("Error occurred while updating civilian: " + e.getMessage());
         }
 
     }
 
-    private static void Start() {
+    private static void start() {
 
         System.out.println("Welcome to the Database");
         System.out.println("Please select one of the following options:");
@@ -223,19 +225,19 @@ public class Menu {
         switch (scan.nextInt()) {
 
             case 1:
-                AddCivilian();
+                addCivilian();
                 break;
             case 2:
-                ViewAllCivilians();
+                viewAllCivilians();
                 break;
             case 3:
-                UpdateCivilian();
+                updateCivilian();
                 break;
             case 4:
-                RemoveCivilian();
+                removeCivilian();
                 break;
             case 5:
-                SearchCivilian();
+                searchCivilian();
                 break;
             default:
                 scan.close();
@@ -252,7 +254,7 @@ public class Menu {
 
         boolean flag = true;
         while (flag) {
-            Start();
+            start();
         }
         
 
