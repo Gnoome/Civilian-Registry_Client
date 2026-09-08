@@ -66,6 +66,6 @@ public class Person implements java.io.Serializable {
     }
 
     public String toString() {
-        return "ID: " + id + "\n Name: " + name + "\n Surname: " + surname + "\n Birthdate: " + birthdate + "\n Gender: " + gender + (address != null ? "\n Address: " + address : "") + (tax != null ? "\n Tax: " + tax : "");
+        return "-----------------------"+ "\n"+ "ID: " + id + "\nName: " + name + "\nSurname: " + surname + "\nBirthdate: " + birthdate + "\nGender: " + gender + (address != null ? "\nAddress: " + address : "") + (tax != null ? "\nTax: " + tax : "")+ "\n" + "-----------------------"+"\n";
     }
 }

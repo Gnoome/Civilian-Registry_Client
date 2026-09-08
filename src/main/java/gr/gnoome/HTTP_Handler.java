@@ -127,12 +127,7 @@ public class HTTP_Handler {
         }
         
        HttpResponse<String> response = sendServerRequest("PATCH", url.toString(), null);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        Person[] persons = objectMapper.readValue(response.body(), Person[].class);
-        for (Person p : persons) {
-            System.out.println(p);
-        }
+       System.out.println(response.body());
     }
 
     public static void deleteCivilian(String id) throws IOException, InterruptedException {
